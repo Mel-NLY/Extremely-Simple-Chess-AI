@@ -6,6 +6,7 @@ I'll admit that I didn't manage to put in as much effort as I could into the enh
 
 ## How To Play
 You can try it out if you want to. But just a note that going to a depth of 4 or 5 would greatly slow the playing speed. So, choose wisely, at your own risk.
+Play here: https://mel-nly.github.io/Extremely-Simple-Chess-AI/
 
 ## Structure
 * Board Visualisation
