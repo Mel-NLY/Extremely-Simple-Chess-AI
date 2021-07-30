@@ -24,27 +24,31 @@ Connected Chessboard.js with [Chess.js](https://github.com/jhlywa/chess.js). Che
   - Install chess.js
 
 ### Evaluation
-Used the [Simplified Evaluation Function] (https://www.chessprogramming.org/Simplified_Evaluation_Function) from ChessProgramming Wiki. 
+Used the [Simplified Evaluation Function](https://www.chessprogramming.org/Simplified_Evaluation_Function) from ChessProgramming Wiki. 
 
 ### Search
 **Minimax & Alpha-Beta Pruning**
+
 This is the search algorithm used in this program, and where the AI part comes in. Though, honestly this is like a glorified version of decision tree.
 Here's a really good explanation on the algorithm - https://www.youtube.com/watch?v=l-hh51ncgDI
 
 **Negamax**
+
 This is another algo but it wasn't used here because I felt like it was just the same as the Minimax & Alpha-Beta Pruning (the one before this). The only difference was that instead of keeping track of 2 score variables: Black & White, it only keeps track of 1.
 
 An example:
-    int negaMax( int depth ) { 
-        if ( depth == 0 ) return evaluate(); 
-        int max = -oo; 
-        for ( all moves)  { 
-            score = -negaMax( depth - 1 ); 
-            if( score > max ) 
-                max = score; 
-        } 
-        return max; 
-    }
+``` java
+int negaMax( int depth ) { 
+    if ( depth == 0 ) return evaluate(); 
+    int max = -oo; 
+    for ( all moves)  { 
+        score = -negaMax( depth - 1 ); 
+        if( score > max ) 
+            max = score; 
+    } 
+    return max; 
+}
+```
 
 ## Tools
 - VScode
@@ -74,7 +78,9 @@ When I first started out, I had close to 0 knowledge in Chess play and how I cou
 ## Common Chess Jargon
 Jargon | Definition | Example
 ------ | ---------- | -------
-[Chess Standard Algebraic Notation (SAN)](http://cfajohnson.com/chess/SAN/) | A system for recording chess moves. Moves are represented by the name of the piece and the square to which it is being moved. | Nf3, Qb7, Bb5
+[Chess Standard Algebraic Notation (SAN)](http://cfajohnson.com/chess/SAN/) | A system for recording chess moves. Moves are represented by the name of the piece and the square to which it is being moved. Black side (Lowercase), White side (Uppercase). Except pawns (No initial is used) | Nf3, Qb7, Bb5
+[Forsyth–Edwards Notation (FEN)](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation) | Piece placement (From white POV) / w or b (Active colour) / Castling availability / En passant / Halfmove clock / Fullmove number | rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 10
+Transposition | Encountering the same positions again and again but from different sequences of moves | -
 
 ## References
 Title | Link
@@ -87,4 +93,6 @@ AlphaZero - A Novel Reinforcement Learning Algorithm | https://towardsdatascienc
 Converting Keras / Tensorflow onto JS | https://towardsdatascience.com/deploying-a-simple-machine-learning-model-into-a-webapp-using-tensorflow-js-3609c297fb04 
 Creating A Chess AI using Deep Learning | https://towardsdatascience.com/creating-a-chess-ai-using-deep-learning-d5278ea7dcf 
 Python Chess Library Documentation | https://python-chess.readthedocs.io/en/latest/ 
-Extracting PGN | https://github.com/pmerg/ExtractPGN 
+Extracting PGN | https://github.com/pmerg/ExtractPGN
+PYTHON VS. JAVASCRIPT FOR AI: WHICH ONE SHOULD YOU CHOOSE? | https://www.analyticsinsight.net/python-vs-javascript-ai-one-choose/
+Play Random Computer | https://chessboardjs.com/examples#5001
