@@ -25,54 +25,50 @@ var minimaxRoot = function(depth, game, isMaximisingPlayer) {
     return bestMoveFound;
 };
 
-var minimax = function (depth, game, alpha, beta, isMaximisingPlayer) {
-    positionCount++;
-    if (depth === 0) {
-        return -evaluateBoard(game.board());
-    }
+// var minimax = function (depth, game, alpha, beta, isMaximisingPlayer) {
+//     positionCount++;
+//     if (depth === 0) {
+//         return -evaluateBoard(game.board());
+//     }
 
-    var newGameMoves = game.ugly_moves();
+//     var newGameMoves = game.ugly_moves();
 
-    if (isMaximisingPlayer) {
-        var bestMove = -9999;
-        for (var i = 0; i < newGameMoves.length; i++) {
-            game.ugly_move(newGameMoves[i]);
-            bestMove = Math.max(bestMove, minimax(depth - 1, game, alpha, beta, !isMaximisingPlayer));
-            game.undo();
-            alpha = Math.max(alpha, bestMove);
-            if (beta <= alpha) {
-                return bestMove;
-            }
-        }
-        return bestMove;
-    } else {
-        var bestMove = 9999;
-        for (var i = 0; i < newGameMoves.length; i++) {
-            game.ugly_move(newGameMoves[i]);
-            bestMove = Math.min(bestMove, minimax(depth - 1, game, alpha, beta, !isMaximisingPlayer));
-            game.undo();
-            beta = Math.min(beta, bestMove);
-            if (beta <= alpha) {
-                return bestMove;
-            }
-        }
-        return bestMove;
-    }
-};
+//     if (isMaximisingPlayer) {
+//         var bestMove = -9999;
+//         for (var i = 0; i < newGameMoves.length; i++) {
+//             game.ugly_move(newGameMoves[i]);
+//             bestMove = Math.max(bestMove, minimax(depth - 1, game, alpha, beta, !isMaximisingPlayer));
+//             game.undo();
+//             alpha = Math.max(alpha, bestMove);
+//             if (beta <= alpha) {
+//                 return bestMove;
+//             }
+//         }
+//         return bestMove;
+//     } else {
+//         var bestMove = 9999;
+//         for (var i = 0; i < newGameMoves.length; i++) {
+//             game.ugly_move(newGameMoves[i]);
+//             bestMove = Math.min(bestMove, minimax(depth - 1, game, alpha, beta, !isMaximisingPlayer));
+//             game.undo();
+//             beta = Math.min(beta, bestMove);
+//             if (beta <= alpha) {
+//                 return bestMove;
+//             }
+//         }
+//         return bestMove;
+//     }
+// };
 
-var evaluateBoard = function (board) {
-    var totalEvaluation = 0;
-    for (var i = 0; i < 8; i++) {
-        for (var j = 0; j < 8; j++) {
-            totalEvaluation = totalEvaluation + getPieceValue(board[i][j], i ,j);
-        }
-    }
-    return totalEvaluation;
-};
-
-var reverseArray = function(array) {
-    return array.slice().reverse();
-};
+// var evaluateBoard = function (board) {
+//     var totalEvaluation = 0;
+//     for (var i = 0; i < 8; i++) {
+//         for (var j = 0; j < 8; j++) {
+//             totalEvaluation = totalEvaluation + getPieceValue(board[i][j], i ,j);
+//         }
+//     }
+//     return totalEvaluation;
+// };
 
 /* Evaluation Function - PeSTO */
 
@@ -85,6 +81,10 @@ var K = 5
 
 var mg_value = [ 82, 337, 365, 477, 1025,  0]; // Mid game default values
 var eg_value = [ 94, 281, 297, 512,  936,  0]; // End game default values
+
+var OTHER = function(side){
+  return (side)^ 1 //Bitwise XOR (exclusive OR)
+}
 
 /* Piece Table Values Taken from Rofchade - http://www.talkchess.com/forum3/viewtopic.php?f=2&t=68311&start=19*/
 
@@ -99,7 +99,7 @@ let mg_pawn_table = [
     0,   0,   0,   0,   0,   0,  0,   0,
 ];
 
-let eg_pawn_tabl = [
+let eg_pawn_table = [
     0,   0,   0,   0,   0,   0,   0,   0,
   178, 173, 158, 134, 147, 132, 165, 187,
   94, 100,  85,  67,  56,  53,  82,  84,
@@ -220,30 +220,34 @@ let eg_king_table = [
   -53, -34, -21, -11, -28, -14, -24, -43
 ];
 
-let* mg_pesto_table =
-[
-  mg_pawn_table,
-  mg_knight_table,
-  mg_bishop_table,
-  mg_rook_table,
-  mg_queen_table,
-  mg_king_table
-];
+var eval = function() {
+    var mg[2];
+    var eg[2];
+    var gamePhase = 0;
 
-let* eg_pesto_table =
-[
-  eg_pawn_table,
-  eg_knight_table,
-  eg_bishop_table,
-  eg_rook_table,
-  eg_queen_table,
-  eg_king_table
-];
+    mg[WHITE] = 0;
+    mg[BLACK] = 0;
+    eg[WHITE] = 0;
+    eg[BLACK] = 0;
 
-let gamephaseInc = [0,0,1,1,1,1,2,2,4,4,0,0];
-let mg_table;
-let eg_table;
+    /* evaluate each piece */
+    for (int sq = 0; sq < 64; ++sq) {
+        int pc = board[sq];
+        if (pc != EMPTY) {
+            mg[PCOLOR(pc)] += mg_table[pc][sq];
+            eg[PCOLOR(pc)] += eg_table[pc][sq];
+            gamePhase += gamephaseInc[pc];
+        }
+    }
 
+    /* tapered eval */
+    int mgScore = mg[side2move] - mg[OTHER(side2move)];
+    int egScore = eg[side2move] - eg[OTHER(side2move)];
+    int mgPhase = gamePhase;
+    if (mgPhase > 24) mgPhase = 24; /* in case of early promotion */
+    int egPhase = 24 - mgPhase;
+    return (mgScore * mgPhase + egScore * egPhase) / 24;
+}
 
 /* Board Visualization & Games State Handling */
 
