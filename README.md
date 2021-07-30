@@ -1,4 +1,4 @@
-# Extremely Simple AI Chess
+# Extremely Simple Chess AI
 
 Had originally started out this project to play against my brother and beat him in it. (I'm a beginner noob at chess)
 
